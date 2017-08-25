@@ -1,0 +1,20 @@
+{
+  "name": "k8w-super-date",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "build": "rm -rf dist && tsc && cp package.json index.d.ts dist/"
+  },
+  "keywords": [
+    "k8w"
+  ],
+  "author": "k8w",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^8.0.23"
+  },
+  "typings": "index.d.ts"
+}

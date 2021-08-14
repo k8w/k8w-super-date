@@ -1,27 +1,21 @@
 ///<reference path="index.d.ts"/>
 
-function repeat(str: string, times: number){
-    let output = '';
-    for(let i=0; i<times; ++i){
-        output += str;
-    }
-    return output;
+function prependZero(matched: string, num: number) {
+    return matched.length > 1 && num < 10 ? `0${num}` : `${num}`;
 }
 
-Date.prototype.format = function (formatString: string = 'yyyy-MM-dd hh:mm:ss') {
-    var o: any = {
-        "M+": this.getMonth() + 1, //月份
-        "d+": this.getDate(), //日
-        "h+": this.getHours(), //小时
-        "m+": this.getMinutes(), //分
-        "s+": this.getSeconds(), //秒
-        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-        "S+": this.getMilliseconds() //毫秒
-    };
-    if (/(y+)/.test(formatString)) formatString = formatString.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    for (var k in o as any)
-        if (new RegExp("(" + k + ")").test(formatString)) formatString = formatString.replace(RegExp.$1, repeat('0', Math.max(RegExp.$1.length - ('' + o[k]).length, 0)) + o[k]);
-    return formatString;
+Date.prototype.format = function (pattern: string = 'YYYY-MM-DD hh:mm:ss') {
+    return pattern.replace(/y{2,}|Y{2,}/, v => (this.getFullYear() + "").substr(4 - v.length))
+        .replace(/M{1,2}/, v => prependZero(v, this.getMonth() + 1))
+        .replace(/D{1,2}|d{1,2}/, v => prependZero(v, this.getDate()))
+        .replace(/Q|q/, v => prependZero(v, Math.ceil((this.getMonth() + 1) / 3)))
+        .replace(/h{1,2}|H{1,2}/, v => prependZero(v, this.getHours()))
+        .replace(/m{1,2}/, v => prependZero(v, this.getMinutes()))
+        .replace(/s{1,2}/, v => prependZero(v, this.getSeconds()))
+        .replace(/SSS|S/, v => {
+            let ms = '' + this.getMilliseconds();
+            return v.length === 1 ? ms : `${ms.length === 1 ? '00' : ms.length === 2 ? '0' : ''}${ms}`;
+        })
 }
 
 Date.today = function () {
